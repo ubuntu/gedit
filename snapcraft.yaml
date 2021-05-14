@@ -1,0 +1,170 @@
+name: gedit
+version: git
+adopt-info: gedit
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict
+base: core18
+
+layout:
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpeas-1.0:
+    symlink: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpeas-1.0
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit:
+    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit
+  /usr/share/gedit:
+    symlink: $SNAP/usr/share/gedit
+
+slots:
+  # for GtkApplication registration
+  gedit:
+    interface: dbus
+    bus: session
+    name: org.gnome.gedit
+
+apps:
+  gedit:
+    command: usr/bin/gedit
+    extensions: [gnome-3-28]
+    plugs:
+      - avahi-observe
+      - cups-control
+      - gsettings
+      - home
+      - network
+      - mount-observe
+      - removable-media
+    common-id: org.gnome.gedit.desktop
+    environment:
+      GSETTINGS_SCHEMA_DIR: $SNAP/share/glib-2.0/schemas
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      GI_TYPELIB_PATH: $SNAP/usr/lib/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
+      PYTHONPATH: $SNAP/usr/lib/python3/dist-packages:$SNAP/gnome-platform/usr/lib/python3/dist-packages
+      GTK_USE_PORTAL: 1
+
+parts:
+  gtksourceview:
+    source: https://gitlab.gnome.org/GNOME/gtksourceview.git
+    source-type: git
+    source-branch: gtksourceview-4-8
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dc_args="-Wno-error=undef"
+    organize:
+      snap/gedit/current/usr: usr
+    build-packages:
+      - autoconf-archive
+      - gettext
+      - gobject-introspection
+      - gtk-doc-tools
+      - libfribidi-dev
+      - libgirepository1.0-dev
+      - libglib2.0-dev
+      - libgtk-3-dev
+      - libpeas-dev
+      - libxml2-dev
+      - libxml2-utils
+      - valac
+    # meson gir overrides don't work well
+    override-build: |
+       snapcraftctl build
+       cp $SNAPCRAFT_PART_INSTALL/usr/share/gir-1.0/GtkSource* /usr/share/gir-1.0
+       cp $SNAPCRAFT_PART_INSTALL/usr/share/vala/vapi/gtksource* /usr/share/vala/vapi
+
+  gedit:
+    after: [gtksourceview]
+    source: https://gitlab.gnome.org/GNOME/gedit.git
+    source-type: git
+    parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dvala_args="--vapidir=$SNAPCRAFT_STAGE/usr/share/vala/vapi"
+
+    build-environment:
+      - C_INCLUDE_PATH: $SNAPCRAFT_STAGE/usr/include/gtksourceview-4
+    override-build: |
+       sed -i.bak -e 's|Icon=org.gnome.gedit$|Icon=${SNAP}/meta/gui/org.gnome.gedit.svg|g' data/org.gnome.gedit.desktop.in
+       sed -i.bak -e "s|symlink_media: true|symlink_media: false|g" help/meson.build
+       snapcraftctl build
+       mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
+       cp data/icons/org.gnome.gedit.svg $SNAPCRAFT_PART_INSTALL/meta/gui/
+       cp ../install/usr/share/applications/org.gnome.gedit.desktop $SNAPCRAFT_PART_INSTALL/meta/gui/
+    build-packages:
+      - desktop-file-utils
+      - gettext
+      - gsettings-desktop-schemas-dev
+      - gtk-doc-tools
+      - itstool
+      - libsoup2.4-dev
+      - libgspell-1-dev
+      - libxml2-dev
+      - libglib2.0-dev
+      - libgtk-3-dev
+      - libpeas-dev
+      - libx11-dev
+      - python3
+      - python-gi-dev
+      - gobject-introspection
+      - libgirepository1.0-dev
+      - valac
+    stage-packages:
+      - libfribidi0
+
+  gedit-plugins:
+    after: [gedit]
+    source: https://gitlab.gnome.org/GNOME/gedit-plugins.git
+    source-type: git
+    plugin: meson
+    meson-parameters:
+      - --prefix=/snap/gedit/current/usr
+      - -Dplugin_bookmarks=true
+      - -Dplugin_bracketcompletion=true
+      - -Dplugin_charmap=true
+      - -Dplugin_codecomment=true
+      - -Dplugin_colorpicker=true
+      - -Dplugin_colorschemer=true
+      - -Dplugin_commander=false
+      - -Dplugin_drawspaces=true
+      - -Dplugin_findinfiles=false
+      - -Dplugin_git=true
+      - -Dplugin_joinlines=true
+      - -Dplugin_multiedit=false
+      - -Dplugin_smartspaces=true
+      - -Dplugin_terminal=true
+      - -Dplugin_textsize=true
+      - -Dplugin_translate=true
+      - -Dplugin_wordcompletion=true
+      - -Dplugin_zeitgeist=false
+    organize:
+      snap/gedit/current/usr: usr
+    build-environment:
+      - C_INCLUDE_PATH: $SNAPCRAFT_STAGE/usr/include:$SNAPCRAFT_STAGE/usr/include/gedit-3.14:$SNAPCRAFT_STAGE/usr/include/gtksourceview-4
+      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit
+      - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+    build-packages:
+      - appstream
+      - build-essential
+      - gettext
+      - gnome-common
+      - itstool
+      - libgit2-glib-1.0-dev
+      - libglib2.0-dev
+      - libgtk-3-dev
+      - libgucharmap-2-90-dev
+      - libvte-2.91-dev
+      - python3
+      - python3-dbus
+      - python-dbus-dev
+      - python-gi-dev
+      - yelp-tools
+    stage-packages:
+      - python3
+      - python3-dbus
+      - python3-gi
+      - python3-setuptools
+# Zeitgeist plugin isn't as useful in a Snap.
+    stage:
+      - -usr/lib/gedit/plugins/libzeitgeist.so
+      - -usr/lib/gedit/plugins/zeitgeist.plugin
+      - -usr/share/help/*/gedit/zeitgeist-dataprovider.page
+      - -usr/share/metainfo/gedit-zeitgeist.metainfo.xml
