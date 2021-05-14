@@ -1,5 +1,5 @@
 name: gedit
-version: git
+adopt-info: gedit
 adopt-info: gedit
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
@@ -82,6 +82,9 @@ parts:
 
     build-environment:
       - C_INCLUDE_PATH: $SNAPCRAFT_STAGE/usr/include/gtksourceview-4
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version $(git describe --tags --abbrev=10)
     override-build: |
        sed -i.bak -e 's|Icon=org.gnome.gedit$|Icon=${SNAP}/meta/gui/org.gnome.gedit.svg|g' data/org.gnome.gedit.desktop.in
        sed -i.bak -e "s|symlink_media: true|symlink_media: false|g" help/meson.build
