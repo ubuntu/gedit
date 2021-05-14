@@ -1,19 +1,5 @@
-# How to use this template repository
-
-This is a template repository, meant to be copied to start a skeleton of other projects. This template provides a few things:
-- build workflow so that a snap is built automatically when a Pull Request (PR) is opened
-- PR template
-- README.md skeleton
-
-A bit about the README.md below:
-- Delete everything in this "How to use this template repository" (everything above the ==== line). 
-- Replace gedit with the name of the snap (ex. gedit).
-- Update any section starting with "TODO" to add the info requested, and remove the TODO line.
-
-========================================================================================
 # gedit
 
-TODO: Add links to badges. Here's the gedit badge links for example:
 *[![gedit](https://snapcraft.io/gedit/badge.svg)](https://snapcraft.io/gedit)
 [![gedit](https://snapcraft.io/gedit/trending.svg?name=0)](https://snapcraft.io/gedit)*
 
