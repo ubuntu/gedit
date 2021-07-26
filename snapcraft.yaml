@@ -28,7 +28,6 @@ apps:
     plugs:
       - avahi-observe
       - cups-control
-      - gsettings
       - home
       - network
       - mount-observe
@@ -63,7 +62,6 @@ parts:
       snap/gedit/current/usr: usr
     build-packages:
       - libuchardet-dev
-      - libgtksourceview-4-dev
 
   gedit:
     after: [tepl]
@@ -84,11 +82,6 @@ parts:
        mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
        cp  $SNAPCRAFT_PART_SRC/data/icons/org.gnome.gedit.svg $SNAPCRAFT_PART_INSTALL/meta/gui/
        cp $SNAPCRAFT_PART_INSTALL/usr/share/applications/org.gnome.gedit.desktop $SNAPCRAFT_PART_INSTALL/meta/gui/
-    build-packages:
-      - gsettings-desktop-schemas-dev
-      - itstool
-      - libsoup2.4-dev
-      - libgspell-1-dev
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version $(git describe --tags --abbrev=10)
@@ -125,9 +118,6 @@ parts:
       - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit
       - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
     build-packages:
-      - appstream
-      - gettext
-      - itstool
       - libgit2-glib-1.0-dev
       - libgucharmap-2-90-dev
       - libvte-2.91-dev
