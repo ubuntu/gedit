@@ -110,7 +110,6 @@ parts:
       - -Dplugin_textsize=true
       - -Dplugin_translate=true
       - -Dplugin_wordcompletion=true
-      - -Dplugin_zeitgeist=false
     organize:
       snap/gedit/current/usr: usr
     build-environment:
@@ -122,12 +121,6 @@ parts:
       - libgucharmap-2-90-dev
       - libvte-2.91-dev
       - yelp-tools
-# Zeitgeist plugin isn't as useful in a Snap.
-    stage:
-      - -usr/lib/gedit/plugins/libzeitgeist.so
-      - -usr/lib/gedit/plugins/zeitgeist.plugin
-      - -usr/share/help/*/gedit/zeitgeist-dataprovider.page
-      - -usr/share/metainfo/gedit-zeitgeist.metainfo.xml
 
   libraries:
     plugin: nil
