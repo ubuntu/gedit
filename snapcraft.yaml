@@ -37,36 +37,9 @@ apps:
       GI_TYPELIB_PATH: $SNAP/usr/lib/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
 
 parts:
-  amtk:
-    source: https://gitlab.gnome.org/GNOME/amtk.git
-    source-type: git
-    source-tag: 5.2.0
-    plugin: autotools
-    autotools-configure-parameters:
-      - --prefix=/usr
-      - --enable-introspection=yes
-    organize:
-      snap/gedit/current/usr: usr
-    build-packages:
-      - gnome-common
-      - gtk-doc-tools
-
-  tepl:
-    after: [amtk]
-    source: https://gitlab.gnome.org/GNOME/tepl.git
-    source-type: git
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-    organize:
-      snap/gedit/current/usr: usr
-    build-packages:
-      - libuchardet-dev
-
   gedit:
-    after: [tepl]
     source: https://gitlab.gnome.org/GNOME/gedit.git
-    source-branch: gnome-41
+    source-branch: gnome-42
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
     plugin: meson
@@ -89,6 +62,7 @@ parts:
   gedit-plugins:
     after: [gedit]
     source: https://gitlab.gnome.org/GNOME/gedit-plugins.git
+    source-branch: master
     source-type: git
     plugin: meson
     meson-parameters:
@@ -120,7 +94,6 @@ parts:
       - libgit2-glib-1.0-dev
       - libgucharmap-2-90-dev
       - libvte-2.91-dev
-      - yelp-tools
 
   libraries:
     plugin: nil
