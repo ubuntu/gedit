@@ -59,7 +59,7 @@ parts:
   gedit:
     after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
-    source-tag: '42.1'
+    source-tag: '42.2'
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
     plugin: meson
