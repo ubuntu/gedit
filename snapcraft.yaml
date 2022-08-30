@@ -2,15 +2,15 @@ name: gedit
 adopt-info: gedit
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
-base: core20
+base: core22
 
 layout:
-  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpeas-1.0:
-    symlink: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpeas-1.0
-  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit:
-    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit
-  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/peas-demo:
-    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/peas-demo
+  /usr/lib/$CRAFT_ARCH_TRIPLET/libpeas-1.0:
+    symlink: $SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET/libpeas-1.0
+  /usr/lib/$CRAFT_ARCH_TRIPLET/gedit:
+    symlink: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/gedit
+  /usr/lib/$CRAFT_ARCH_TRIPLET/peas-demo:
+    symlink: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/peas-demo
   /usr/share/gedit:
     symlink: $SNAP/usr/share/gedit
 
@@ -24,7 +24,7 @@ slots:
 apps:
   gedit:
     command: usr/bin/gedit
-    extensions: [gnome-3-38]
+    extensions: [gnome]
     plugs:
       - avahi-observe
       - cups-control
@@ -34,35 +34,53 @@ apps:
       - removable-media
     common-id: org.gnome.gedit.desktop
     environment:
-      GI_TYPELIB_PATH: $SNAP/usr/lib/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
+      GI_TYPELIB_PATH: $SNAP/usr/lib/girepository-1.0:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/gedit/girepository-1.0:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET/girepository-1.0
 
 parts:
+  gtksourceview:
+    source: https://gitlab.gnome.org/GNOME/gtksourceview.git
+    source-tag: '4.8.3'
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
+    build-packages:
+      - gettext
+      - libxml2-dev
+      - gobject-introspection
+    build-environment:
+      - PYTHONPATH: /snap/gnome-42-2204-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
+    override-pull: |
+      set -eux
+      craftctl default
+      sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
+
   gedit:
+    after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
-    source-branch: gnome-42
+    source-tag: '42.2'
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - -Dvala_args="--vapidir=$SNAPCRAFT_STAGE/usr/share/vala/vapi"
+      - --buildtype=release
+      - -Dvala_args="--vapidir=$CRAFT_STAGE/usr/share/vala/vapi"
     build-environment:
-      - C_INCLUDE_PATH: $SNAPCRAFT_STAGE/usr/include/gtksourceview-4
+      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include/gtksourceview-4
+      - PYTHONPATH: /snap/gnome-42-2204-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
     override-build: |
-       sed -i.bak -e 's|Icon=org.gnome.gedit$|Icon=${SNAP}/meta/gui/org.gnome.gedit.svg|g' $SNAPCRAFT_PART_SRC/data/org.gnome.gedit.desktop.in
-       sed -i.bak -e "s|symlink_media: true|symlink_media: false|g" $SNAPCRAFT_PART_SRC/help/meson.build
-       snapcraftctl build
-       mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
-       cp  $SNAPCRAFT_PART_SRC/data/icons/org.gnome.gedit.svg $SNAPCRAFT_PART_INSTALL/meta/gui/
-       cp $SNAPCRAFT_PART_INSTALL/usr/share/applications/org.gnome.gedit.desktop $SNAPCRAFT_PART_INSTALL/meta/gui/
-    override-pull: |
-      snapcraftctl pull
-      snapcraftctl set-version $(git describe --tags --abbrev=10)
+      sed -i.bak -e 's|Icon=org.gnome.gedit$|Icon=${SNAP}/meta/gui/org.gnome.gedit.svg|g' $CRAFT_PART_SRC/data/org.gnome.gedit.desktop.in
+      sed -i.bak -e "s|symlink_media: true|symlink_media: false|g" $CRAFT_PART_SRC/help/meson.build
+      craftctl default
+      mkdir -p $CRAFT_PART_INSTALL/meta/gui/
+      cp $CRAFT_PART_SRC/data/icons/org.gnome.gedit.svg $CRAFT_PART_INSTALL/meta/gui/
 
   gedit-plugins:
-    after: [gedit]
+    after: [ gedit ]
     source: https://gitlab.gnome.org/GNOME/gedit-plugins.git
-    source-branch: master
+    source-tag: '42.1'
     source-type: git
     plugin: meson
     meson-parameters:
@@ -84,12 +102,13 @@ parts:
       - -Dplugin_textsize=true
       - -Dplugin_translate=true
       - -Dplugin_wordcompletion=true
+      - --buildtype=release
     organize:
       snap/gedit/current/usr: usr
     build-environment:
-      - C_INCLUDE_PATH: $SNAPCRAFT_STAGE/usr/include:$SNAPCRAFT_STAGE/usr/include/gedit-3.14:$SNAPCRAFT_STAGE/usr/include/gtksourceview-4
-      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit
-      - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include:$CRAFT_STAGE/usr/include/gedit-41:$CRAFT_STAGE/usr/include/gtksourceview-4
+      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gedit
+      - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig
     build-packages:
       - libgit2-glib-1.0-dev
       - libgucharmap-2-90-dev
@@ -109,9 +128,9 @@ parts:
   cleanup:
     after: [gedit-plugins, libraries]
     plugin: nil
-    build-snaps: [core20, gtk-common-themes, gnome-3-38-2004/latest/candidate]
+    build-snaps: [core22, gtk-common-themes, gnome-42-2204]
     override-prime: |
       set -eux
-      for snap in "core20" "gtk-common-themes" "gnome-3-38-2004"; do
-        cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
+      for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
+        cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
       done
