@@ -76,9 +76,6 @@ parts:
       craftctl default
       mkdir -p $CRAFT_PART_INSTALL/meta/gui/
       cp $CRAFT_PART_SRC/data/icons/org.gnome.gedit.svg $CRAFT_PART_INSTALL/meta/gui/
-    override-pull: |
-      craftctl default
-      craftctl set version=$(git describe --tags --abbrev=10)
 
   gedit-plugins:
     after: [ gedit ]
