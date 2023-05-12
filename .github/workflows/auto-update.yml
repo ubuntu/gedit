@@ -1,0 +1,22 @@
+name: Push new tag if new upstream tag is available
+
+on:
+  schedule:
+    # Daily for now
+    - cron: '9 7 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-snapcraft-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - name: Run desktop-snaps action  
+        uses: ubuntu/desktop-snaps@stable
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repo: ${{ github.repository }}
