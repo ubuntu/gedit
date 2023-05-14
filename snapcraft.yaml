@@ -68,6 +68,7 @@ parts:
 #   version-format:
 #     lower-than: '44'
 #     no-9x-revisions: true
+    source-depth: 1
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
     plugin: meson
@@ -93,6 +94,7 @@ parts:
 #   version-format:
 #     lower-than: '44'
 #     no-9x-revisions: true
+    source-depth: 1
     source-type: git
     plugin: meson
     meson-parameters:
