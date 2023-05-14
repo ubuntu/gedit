@@ -39,7 +39,7 @@ apps:
 parts:
   gtksourceview:
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '4.8.3'
+    source-tag: '4.8.4'
 # ext:updatesnap
 #   version-format:
 #     lower-than: '5'
@@ -63,7 +63,7 @@ parts:
   gedit:
     after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
-    source-tag: '42.2'
+    source-tag: '43.2'
 # ext:updatesnap
 #   version-format:
 #     lower-than: '44'
@@ -89,7 +89,7 @@ parts:
   gedit-plugins:
     after: [ gedit ]
     source: https://gitlab.gnome.org/GNOME/gedit-plugins.git
-    source-tag: '42.1'
+    source-tag: '43.0'
 # ext:updatesnap
 #   version-format:
 #     lower-than: '44'
