@@ -1,4 +1,4 @@
-name: Open a PR if a new update is available
+name: Push new tag update to stable branch
 
 on:
   schedule:
@@ -13,8 +13,7 @@ jobs:
       - name: Checkout this repo
         uses: actions/checkout@v3
       - name: Run desktop-snaps action  
-        #uses: ubuntu/desktop-snaps@stable
-        uses: ubuntu/desktop-snaps@push-no-pr
+        uses: ubuntu/desktop-snaps@stable
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
