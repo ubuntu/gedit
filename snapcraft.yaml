@@ -85,6 +85,8 @@ parts:
       craftctl default
       mkdir -p $CRAFT_PART_INSTALL/meta/gui/
       cp $CRAFT_PART_SRC/data/icons/org.gnome.gedit.svg $CRAFT_PART_INSTALL/meta/gui/
+    build-packages:
+      - libamtk-5-dev
 
   gedit-plugins:
     after: [ gedit ]
