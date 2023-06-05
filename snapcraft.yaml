@@ -60,8 +60,17 @@ parts:
       craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
+  amtk:
+    source: https://github.com/gedit-technology/libgedit-amtk.git
+    source-depth: 1
+    source-type: git
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=false
+
   gedit:
-    after: [ gtksourceview ]
+    after: [ gtksourceview, amtk ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
     source-tag: '43.2'
 # ext:updatesnap
@@ -85,8 +94,6 @@ parts:
       craftctl default
       mkdir -p $CRAFT_PART_INSTALL/meta/gui/
       cp $CRAFT_PART_SRC/data/icons/org.gnome.gedit.svg $CRAFT_PART_INSTALL/meta/gui/
-    build-packages:
-      - libamtk-5-dev
 
   gedit-plugins:
     after: [ gedit ]
