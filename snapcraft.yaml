@@ -69,8 +69,36 @@ parts:
       - --prefix=/usr
       - -Dgtk_doc=false
 
+
+  gedit-gtksourceview:
+    source: https://github.com/gedit-technology/libgedit-gtksourceview.git
+    source-depth: 1
+    source-tag: '299.0.2'
+    plugin: autotools
+    autotools-configure-parameters: [ --prefix=/usr ]
+    #override-build: |
+    #  autoreconf --install
+    #  craftctl default
+    build-environment:
+      - M4PATH: /snap/gnome-42-2204-sdk/current/usr/lib/glibmm-2.4
+    build-packages:
+      - gtk-doc-tools
+
+  tepl:
+    after: [ gedit-gtksourceview ]
+    source: https://gitlab.gnome.org/swilmet/tepl.git
+    source-depth: 1
+    source-tag: '6.5.1'
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=false
+    #override-build: |
+    #  set -ex
+    #  craftctl default
+
   gedit:
-    after: [ gtksourceview, amtk ]
+    after: [ gtksourceview, amtk, tepl ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
     source-tag: '43.2'
 # ext:updatesnap
