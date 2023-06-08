@@ -81,6 +81,7 @@ parts:
     #  craftctl default
     build-environment:
       - M4PATH: /snap/gnome-42-2204-sdk/current/usr/lib/glibmm-2.4
+      - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig
     build-packages:
       - gtk-doc-tools
 
