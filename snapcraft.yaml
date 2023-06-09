@@ -101,10 +101,6 @@ parts:
     after: [ gedit-gtksourceview, amtk, tepl ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
     source-tag: '44.2'
-# ext:updatesnap
-#   version-format:
-#     lower-than: '44'
-#     no-9x-revisions: true
     source-depth: 1
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
@@ -116,8 +112,8 @@ parts:
     build-environment:
       - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include/gtksourceview-4
       - PYTHONPATH: /snap/gnome-42-2204-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
-      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-      - LD_LIBRARY_PATH: /snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${PKG_LIBRARY_PATH:+:$PKG_LIBRARY_PATH}
+      #- PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      #- LD_LIBRARY_PATH: /snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${PKG_LIBRARY_PATH:+:$PKG_LIBRARY_PATH}
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gedit.diff
