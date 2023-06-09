@@ -1,0 +1,12 @@
+diff --git a/meson.build b/meson.build
+index de95d5052..76d16c1b6 100644
+--- a/meson.build
++++ b/meson.build
+@@ -48,6 +48,7 @@ libgedit_public_deps = [
+   dependency('amtk-5', version: '>= 5.6'),
+   dependency('tepl-6', version: '>= 6.2'),
+   dependency('libpeas-gtk-1.0'),
++  dependency('gtksourceview-4'),
+ ]
+ 
+ deps_basic_list = [
