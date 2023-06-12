@@ -71,6 +71,9 @@ parts:
 
 
   gedit-gtksourceview:
+# ext:updatesnap
+#   version-format:
+#     allow-neither-tag-nor-branch: true
     source: https://gedit-technology.net/tarballs/libgedit-gtksourceview/libgedit-gtksourceview-299.0.2.tar.xz
     plugin: nil
     after: [gtksourceview]
