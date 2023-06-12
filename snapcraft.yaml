@@ -143,16 +143,13 @@ parts:
       - -Dplugin_codecomment=true
       - -Dplugin_colorpicker=true
       - -Dplugin_colorschemer=true
-      - -Dplugin_commander=false
       - -Dplugin_drawspaces=true
-      - -Dplugin_findinfiles=false
       - -Dplugin_git=true
       - -Dplugin_joinlines=true
       - -Dplugin_multiedit=false
       - -Dplugin_smartspaces=true
       - -Dplugin_terminal=true
       - -Dplugin_textsize=true
-      - -Dplugin_translate=true
       - -Dplugin_wordcompletion=true
       - --buildtype=release
     organize:
