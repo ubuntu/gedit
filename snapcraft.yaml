@@ -60,14 +60,47 @@ parts:
       craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
+  amtk:
+    source: https://github.com/gedit-technology/libgedit-amtk.git
+    source-depth: 1
+    source-type: git
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=false
+
+
+  gedit-gtksourceview:
+    source: https://gedit-technology.net/tarballs/libgedit-gtksourceview/libgedit-gtksourceview-299.0.2.tar.xz
+    plugin: nil
+    after: [gtksourceview]
+    override-build: |
+      ./configure --prefix=/usr
+      make
+      make install DESTDIR=$CRAFT_PART_INSTALL
+    build-environment:
+      - M4PATH: /snap/gnome-42-2204-sdk/current/usr/lib/glibmm-2.4
+      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+    build-packages:
+      - gtk-doc-tools
+
+  tepl:
+    after: [ gedit-gtksourceview, amtk ]
+    source: https://gitlab.gnome.org/swilmet/tepl.git
+    source-depth: 1
+    source-tag: '6.5.1'
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=false
+    #override-build: |
+    #  set -ex
+    #  craftctl default
+
   gedit:
-    after: [ gtksourceview ]
+    after: [ gedit-gtksourceview, amtk, tepl ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
-    source-tag: '43.2'
-# ext:updatesnap
-#   version-format:
-#     lower-than: '44'
-#     no-9x-revisions: true
+    source-tag: '44.2'
     source-depth: 1
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
@@ -79,22 +112,25 @@ parts:
     build-environment:
       - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include/gtksourceview-4
       - PYTHONPATH: /snap/gnome-42-2204-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
+      #- PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      #- LD_LIBRARY_PATH: /snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${PKG_LIBRARY_PATH:+:$PKG_LIBRARY_PATH}
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/gedit.diff
     override-build: |
       sed -i.bak -e 's|Icon=org.gnome.gedit$|Icon=${SNAP}/meta/gui/org.gnome.gedit.svg|g' $CRAFT_PART_SRC/data/org.gnome.gedit.desktop.in
       sed -i.bak -e "s|symlink_media: true|symlink_media: false|g" $CRAFT_PART_SRC/help/meson.build
       craftctl default
       mkdir -p $CRAFT_PART_INSTALL/meta/gui/
       cp $CRAFT_PART_SRC/data/icons/org.gnome.gedit.svg $CRAFT_PART_INSTALL/meta/gui/
-    build-packages:
-      - libamtk-5-dev
 
   gedit-plugins:
     after: [ gedit ]
     source: https://gitlab.gnome.org/GNOME/gedit-plugins.git
-    source-tag: '43.1'
+    source-tag: '44.1'
 # ext:updatesnap
 #   version-format:
-#     lower-than: '44'
+#     lower-than: '45'
 #     no-9x-revisions: true
     source-depth: 1
     source-type: git
@@ -107,16 +143,13 @@ parts:
       - -Dplugin_codecomment=true
       - -Dplugin_colorpicker=true
       - -Dplugin_colorschemer=true
-      - -Dplugin_commander=false
       - -Dplugin_drawspaces=true
-      - -Dplugin_findinfiles=false
       - -Dplugin_git=true
       - -Dplugin_joinlines=true
       - -Dplugin_multiedit=false
       - -Dplugin_smartspaces=true
       - -Dplugin_terminal=true
       - -Dplugin_textsize=true
-      - -Dplugin_translate=true
       - -Dplugin_wordcompletion=true
       - --buildtype=release
     organize:
