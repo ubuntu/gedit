@@ -61,6 +61,9 @@ parts:
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
   amtk:
+# ext:updatesnap
+#   version-format:
+#     allow-neither-tag-nor-branch: true
     source: https://github.com/gedit-technology/libgedit-amtk.git
     source-depth: 1
     source-type: git
