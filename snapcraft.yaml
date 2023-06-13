@@ -67,6 +67,9 @@ parts:
     source: https://github.com/gedit-technology/libgedit-amtk.git
     source-depth: 1
     source-type: git
+# ext:updatesnap
+#   version-format:
+#     allow-neither-tag-nor-branch: true
     plugin: meson
     meson-parameters:
       - --prefix=/usr
