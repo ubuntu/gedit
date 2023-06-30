@@ -97,7 +97,7 @@ parts:
     after: [ gedit-gtksourceview, amtk ]
     source: https://gitlab.gnome.org/swilmet/tepl.git
     source-depth: 1
-    source-tag: '6.5.1'
+    source-tag: '6.6.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
