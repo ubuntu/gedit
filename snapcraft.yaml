@@ -109,7 +109,7 @@ parts:
   gedit:
     after: [ gedit-gtksourceview, amtk, tepl ]
     source: https://gitlab.gnome.org/GNOME/gedit.git
-    source-tag: '45.0'
+    source-tag: '46.0'
     source-depth: 1
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
