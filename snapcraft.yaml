@@ -139,7 +139,7 @@ parts:
     source-tag: '44.1'
 # ext:updatesnap
 #   version-format:
-#     lower-than: '45'
+#     lower-than: '46'
 #     no-9x-revisions: true
     source-depth: 1
     source-type: git
