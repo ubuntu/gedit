@@ -80,18 +80,20 @@ parts:
 # ext:updatesnap
 #   version-format:
 #     allow-neither-tag-nor-branch: true
-    source: https://gedit-technology.net/tarballs/libgedit-gtksourceview/libgedit-gtksourceview-299.0.2.tar.xz
-    plugin: nil
+    source: https://gedit-technology.net/tarballs/libgedit-gtksourceview/libgedit-gtksourceview-299.0.4.tar.xz
+    plugin: meson
     after: [gtksourceview]
-    override-build: |
-      ./configure --prefix=/usr
-      make
-      make install DESTDIR=$CRAFT_PART_INSTALL
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=false
+      - --buildtype=release
     build-environment:
       - M4PATH: /snap/gnome-42-2204-sdk/current/usr/lib/glibmm-2.4
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
     build-packages:
       - gtk-doc-tools
+      - ninja-build
+      - meson
 
   tepl:
     after: [ gedit-gtksourceview, amtk ]
