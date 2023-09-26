@@ -138,7 +138,7 @@ parts:
   gedit-plugins:
     after: [ gedit ]
     source: https://gitlab.gnome.org/GNOME/gedit-plugins.git
-    source-tag: '44.1'
+    source-tag: '45.0'
 # ext:updatesnap
 #   version-format:
 #     lower-than: '46'
