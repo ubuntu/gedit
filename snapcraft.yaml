@@ -153,7 +153,6 @@ parts:
       - -Dplugin_charmap=true
       - -Dplugin_codecomment=true
       - -Dplugin_colorpicker=true
-      - -Dplugin_colorschemer=true
       - -Dplugin_drawspaces=true
       - -Dplugin_git=true
       - -Dplugin_joinlines=true
