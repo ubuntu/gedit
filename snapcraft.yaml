@@ -2,7 +2,7 @@ name: gedit
 adopt-info: gedit
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
-base: core22
+base: core24
 
 layout:
   /usr/lib/$CRAFT_ARCH_TRIPLET/libpeas-1.0:
@@ -54,7 +54,7 @@ parts:
       - libxml2-dev
       - gobject-introspection
     build-environment:
-      - PYTHONPATH: /snap/gnome-42-2204-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
+      - PYTHONPATH: /snap/gnome-46-2404-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
     override-pull: |
       set -eux
       craftctl default
@@ -64,7 +64,8 @@ parts:
 # ext:updatesnap
 #   version-format:
 #     allow-neither-tag-nor-branch: true
-    source: https://github.com/gedit-technology/libgedit-amtk.git
+    source: https://gitlab.gnome.org/World/gedit/libgedit-amtk.git
+    source-tag: '5.8.0'
     source-depth: 1
     source-type: git
 # ext:updatesnap
@@ -80,7 +81,10 @@ parts:
 # ext:updatesnap
 #   version-format:
 #     allow-neither-tag-nor-branch: true
-    source: https://gedit-technology.net/tarballs/libgedit-gtksourceview/libgedit-gtksourceview-299.0.4.tar.xz
+    source: https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview.git
+    source-tag: '299.2.1'
+    source-depth: 1
+    source-type: git
     plugin: meson
     after: [gtksourceview]
     meson-parameters:
@@ -88,7 +92,7 @@ parts:
       - -Dgtk_doc=false
       - --buildtype=release
     build-environment:
-      - M4PATH: /snap/gnome-42-2204-sdk/current/usr/lib/glibmm-2.4
+      - M4PATH: /snap/gnome-46-2404-sdk/current/usr/lib/glibmm-2.4
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
     build-packages:
       - gtk-doc-tools
@@ -97,23 +101,24 @@ parts:
 
   tepl:
     after: [ gedit-gtksourceview, amtk ]
-    source: https://gitlab.gnome.org/swilmet/tepl.git
+    source: https://gitlab.gnome.org/World/gedit/libgedit-tepl.git
     source-depth: 1
     source-tag: '6.9.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - -Dgtk_doc=false
-    #override-build: |
-    #  set -ex
-    #  craftctl default
 
   gedit:
     after: [ gedit-gtksourceview, amtk, tepl ]
-    source: https://gitlab.gnome.org/GNOME/gedit.git
-    source-tag: '47.0'
+    source: https://gitlab.gnome.org/World/gedit/gedit.git
+    source-tag: '46.2'
     source-depth: 1
     source-type: git
+# ext:updatesnap
+#   version-format:
+#     lower-than: '47'
+#     no-9x-revisions: true
     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
     plugin: meson
     meson-parameters:
@@ -122,9 +127,9 @@ parts:
       - -Dvala_args="--vapidir=$CRAFT_STAGE/usr/share/vala/vapi"
     build-environment:
       - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include/gtksourceview-4
-      - PYTHONPATH: /snap/gnome-42-2204-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
+      - PYTHONPATH: /snap/gnome-46-2404-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
       #- PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-      #- LD_LIBRARY_PATH: /snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${PKG_LIBRARY_PATH:+:$PKG_LIBRARY_PATH}
+      #- LD_LIBRARY_PATH: /snap/gnome-46-2404-sdk/current/usr/lib:/snap/gnome-46-2404-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${PKG_LIBRARY_PATH:+:$PKG_LIBRARY_PATH}
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gedit.diff
@@ -137,11 +142,11 @@ parts:
 
   gedit-plugins:
     after: [ gedit ]
-    source: https://gitlab.gnome.org/GNOME/gedit-plugins.git
-    source-tag: '45.0'
+    source: https://gitlab.gnome.org/World/gedit/gedit-plugins.git
+    source-tag: '44.2'
 # ext:updatesnap
 #   version-format:
-#     lower-than: '46'
+#     lower-than: '45'
 #     no-9x-revisions: true
     source-depth: 1
     source-type: git
@@ -165,7 +170,7 @@ parts:
     organize:
       snap/gedit/current/usr: usr
     build-environment:
-      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include:$CRAFT_STAGE/usr/include/gedit-41:$CRAFT_STAGE/usr/include/gtksourceview-4
+      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include:$CRAFT_STAGE/usr/include/gedit-46:$CRAFT_STAGE/usr/include/gtksourceview-4
       - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gedit
       - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig
     build-packages:
@@ -187,9 +192,9 @@ parts:
   cleanup:
     after: [gedit-plugins, libraries]
     plugin: nil
-    build-snaps: [core22, gtk-common-themes, gnome-42-2204]
+    build-snaps: [core24, gtk-common-themes, gnome-46-2404]
     override-prime: |
       set -eux
-      for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
+      for snap in "core24" "gtk-common-themes" "gnome-46-2404"; do
         cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
       done
