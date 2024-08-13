@@ -103,7 +103,7 @@ parts:
     after: [ gedit-gtksourceview, amtk ]
     source: https://gitlab.gnome.org/World/gedit/libgedit-tepl.git
     source-depth: 1
-    source-tag: '6.9.0'
+    source-tag: '6.10.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
