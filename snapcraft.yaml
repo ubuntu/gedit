@@ -65,7 +65,7 @@ parts:
 #   version-format:
 #     allow-neither-tag-nor-branch: true
     source: https://gitlab.gnome.org/World/gedit/libgedit-amtk.git
-    source-tag: '5.8.0'
+    source-tag: '5.9.0'
     source-depth: 1
     source-type: git
 # ext:updatesnap
@@ -82,7 +82,7 @@ parts:
 #   version-format:
 #     allow-neither-tag-nor-branch: true
     source: https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview.git
-    source-tag: '299.2.1'
+    source-tag: '299.3.0'
     source-depth: 1
     source-type: git
     plugin: meson
@@ -103,7 +103,7 @@ parts:
     after: [ gedit-gtksourceview, amtk ]
     source: https://gitlab.gnome.org/World/gedit/libgedit-tepl.git
     source-depth: 1
-    source-tag: '6.10.0'
+    source-tag: '6.11.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
