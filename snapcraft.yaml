@@ -37,29 +37,6 @@ apps:
       GI_TYPELIB_PATH: $SNAP/usr/lib/girepository-1.0:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/gedit/girepository-1.0:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET/girepository-1.0
 
 parts:
-  gtksourceview:
-    source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '4.8.4'
-# ext:updatesnap
-#   version-format:
-#     lower-than: '5'
-#     no-9x-revisions: true
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
-    build-packages:
-      - gettext
-      - libxml2-dev
-      - gobject-introspection
-    build-environment:
-      - PYTHONPATH: /snap/gnome-46-2404-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
-    override-pull: |
-      set -eux
-      craftctl default
-      sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
-
   amtk:
 # ext:updatesnap
 #   version-format:
@@ -76,7 +53,6 @@ parts:
       - --prefix=/usr
       - -Dgtk_doc=false
 
-
   gedit-gtksourceview:
 # ext:updatesnap
 #   version-format:
@@ -86,7 +62,6 @@ parts:
     source-depth: 1
     source-type: git
     plugin: meson
-    after: [gtksourceview]
     meson-parameters:
       - --prefix=/usr
       - -Dgtk_doc=false
@@ -135,7 +110,6 @@ parts:
       - --buildtype=release
       - -Dvala_args="--vapidir=$CRAFT_STAGE/usr/share/vala/vapi"
     build-environment:
-      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include/gtksourceview-4
       - PYTHONPATH: /snap/gnome-46-2404-sdk/current/usr/lib/x86_64-linux-gnu/gobject-introspection${PYTHONPATH:+:$PYTHONPATH}
       #- PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
       #- LD_LIBRARY_PATH: /snap/gnome-46-2404-sdk/current/usr/lib:/snap/gnome-46-2404-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${PKG_LIBRARY_PATH:+:$PKG_LIBRARY_PATH}
@@ -170,7 +144,7 @@ parts:
     organize:
       snap/gedit/current/usr: usr
     build-environment:
-      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include:$CRAFT_STAGE/usr/include/gedit-46:$CRAFT_STAGE/usr/include/gtksourceview-4
+      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include:$CRAFT_STAGE/usr/include/gedit-46
       - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gedit
       - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig
     build-packages:
