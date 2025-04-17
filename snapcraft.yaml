@@ -42,7 +42,7 @@ parts:
 #   version-format:
 #     lower-than: '5.10'
     source: https://gitlab.gnome.org/World/gedit/libgedit-amtk.git
-    source-tag: '5.9.0'
+    source-tag: '5.9.1'
     source-depth: 1
     source-type: git
     plugin: meson
