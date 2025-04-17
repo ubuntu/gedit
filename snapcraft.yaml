@@ -40,14 +40,11 @@ parts:
   amtk:
 # ext:updatesnap
 #   version-format:
-#     allow-neither-tag-nor-branch: true
+#     lower-than: '5.10'
     source: https://gitlab.gnome.org/World/gedit/libgedit-amtk.git
     source-tag: '5.9.0'
     source-depth: 1
     source-type: git
-# ext:updatesnap
-#   version-format:
-#     allow-neither-tag-nor-branch: true
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -56,7 +53,7 @@ parts:
   gedit-gtksourceview:
 # ext:updatesnap
 #   version-format:
-#     allow-neither-tag-nor-branch: true
+#     lower-than: '299.6'
     source: https://gitlab.gnome.org/World/gedit/libgedit-gtksourceview.git
     source-tag: '299.5.0'
     source-depth: 1
@@ -75,6 +72,9 @@ parts:
       - meson
 
   libgedit-gfls:
+# ext:updatesnap
+#   version-format:
+#     lower-than: '0.4'
     source: https://gitlab.gnome.org/World/gedit/libgedit-gfls.git
     source-depth: 1
     source-tag: '0.3.0'
@@ -84,6 +84,9 @@ parts:
       - -Dgtk_doc=false
 
   tepl:
+# ext:updatesnap
+#   version-format:
+#     lower-than: '6.14'
     after: [ gedit-gtksourceview, amtk, libgedit-gfls ]
     source: https://gitlab.gnome.org/World/gedit/libgedit-tepl.git
     source-depth: 1
@@ -94,15 +97,14 @@ parts:
       - -Dgtk_doc=false
 
   gedit:
+# ext:updatesnap
+#   version-format:
+#     lower-than: '49'
     after: [ gedit-gtksourceview, amtk, tepl ]
     source: https://gitlab.gnome.org/World/gedit/gedit.git
     source-tag: '48.2'
     source-depth: 1
     source-type: git
-# ext:updatesnap
-#   version-format:
-#     lower-than: '47'
-#     no-9x-revisions: true
     parse-info: [usr/share/metainfo/org.gnome.gedit.metainfo.xml]
     plugin: meson
     meson-parameters:
@@ -124,13 +126,12 @@ parts:
       cp $CRAFT_PART_SRC/data/icons/org.gnome.gedit-symbolic.svg $CRAFT_PART_INSTALL/meta/gui/
 
   gedit-plugins:
+# ext:updatesnap
+#   version-format:
+#     lower-than: '49'
     after: [ gedit ]
     source: https://gitlab.gnome.org/World/gedit/gedit-plugins.git
     source-tag: '48.2'
-# ext:updatesnap
-#   version-format:
-#     lower-than: '45'
-#     no-9x-revisions: true
     source-depth: 1
     source-type: git
     plugin: meson
