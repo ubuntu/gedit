@@ -38,12 +38,12 @@ apps:
 
 parts:
   gtksourceview:
-    source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '4.99.0'
 # ext:updatesnap
 #   version-format:
-#     lower-than: '5'
+#     lower-than: '4.80'
 #     no-9x-revisions: true
+    source: https://gitlab.gnome.org/GNOME/gtksourceview.git
+    source-tag: '4.8.4'
     source-depth: 1
     plugin: meson
     meson-parameters:
