@@ -143,7 +143,6 @@ parts:
     organize:
       snap/gedit/current/usr: usr
     build-environment:
-      - C_INCLUDE_PATH: $CRAFT_STAGE/usr/include:$CRAFT_STAGE/usr/include/gedit-48-2
       - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gedit
       - PKG_CONFIG_PATH: $PKG_CONFIG_PATH:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig
     build-packages:
