@@ -100,10 +100,10 @@ parts:
   gedit:
 # ext:updatesnap
 #   version-format:
-#     lower-than: '49'
+#     lower-than: '48.2'
     after: [ gedit-gtksourceview, amtk, tepl ]
     source: https://gitlab.gnome.org/World/gedit/gedit.git
-    source-tag: '48.2'
+    source-tag: '48.1'
     source-depth: 1
     source-type: git
     parse-info: [usr/share/metainfo/org.gnome.gedit.metainfo.xml]
@@ -126,18 +126,26 @@ parts:
   gedit-plugins:
 # ext:updatesnap
 #   version-format:
-#     lower-than: '49'
+#     lower-than: '48.2'
     after: [ gedit ]
     source: https://gitlab.gnome.org/World/gedit/gedit-plugins.git
-    source-tag: '48.2'
+    source-tag: '48.1'
     source-depth: 1
     source-type: git
     plugin: meson
     meson-parameters:
       - --prefix=/snap/gedit/current/usr
       - -Dplugin_bookmarks=true
+      - -Dplugin_bracketcompletion=true
+      - -Dplugin_charmap=true
+      - -Dplugin_codecomment=true
+      - -Dplugin_colorpicker=true
       - -Dplugin_drawspaces=true
+      - -Dplugin_joinlines=true
+      - -Dplugin_multiedit=false
+      - -Dplugin_sessionsaver=true
       - -Dplugin_smartspaces=true
+      - -Dplugin_terminal=true
       - -Dplugin_wordcompletion=true
       - --buildtype=release
     organize:
